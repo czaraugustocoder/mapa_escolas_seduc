@@ -13,7 +13,7 @@ shp_path = os.path.join(current_working_directory, "Bairro_de_Manaus__SEMEF_.shp
 
 data_path = os.path.join(current_working_directory, "CDE7.xlsx")
 
-m = folium.Map(location=[-3.127431169828672, -60.002848934833004], zoom_start=10)
+m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=11.45)
 
 st.title("MAPA DAS ESCOLAS")
 
