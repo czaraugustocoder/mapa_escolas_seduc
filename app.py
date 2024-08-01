@@ -13,8 +13,6 @@ shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION.xlsx")
 
-data_mun_path = os.path.join(current_working_directory, "ESC_MUN.xlsx")
-
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=11.45)
 
 st.title("MAPA DAS ESCOLAS")
@@ -59,8 +57,6 @@ else:
     ).add_to(m)
 
 data = pd.read_excel(data_path)
-
-mun_data = pd.read_excel(data_mun_path)
 
 # add marker one by one of state schools on the map
 for i in range(0,len(data)):
