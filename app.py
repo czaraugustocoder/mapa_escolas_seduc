@@ -5,6 +5,10 @@ from streamlit_folium import st_folium
 import pandas as pd
 import os
 
+st.set_page_config(page_title="MAPA",
+                   layout="wide"
+)
+
 current_working_directory = os.getcwd()
 
 path_logo = os.path.join(current_working_directory, "cest_logo.jpeg")
