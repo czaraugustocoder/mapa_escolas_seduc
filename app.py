@@ -9,9 +9,11 @@ current_working_directory = os.getcwd()
 
 path_logo = os.path.join(current_working_directory, "cest_logo.jpeg")
 
-shp_path = os.path.join(current_working_directory, "Bairro_de_Manaus__SEMEF_.shp")
+shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 
-data_path = os.path.join(current_working_directory, "CDE7.xlsx")
+data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION.xlsx")
+
+data_mun_path = os.path.join(current_working_directory, "ESC_MUN.xlsx")
 
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=11.45)
 
@@ -24,13 +26,30 @@ st.sidebar.header("Filtre as opções que deseja:")
 # Ler o shapefile usando geopandas
 gdf = gpd.read_file(shp_path)
 
-local = st.sidebar.multiselect('Escolha o bairro:', gdf['nome'].unique())
+gdf = gdf.to_crs("EPSG:4326")
+
+zona = st.sidebar.multiselect('Escolha a zona:', gdf['ZONAS'].unique())
+
+if (len(zona) > 1) or (len(zona) == 0):
+   print(zona)
+else:
+    print(zona)
+    zona_shp = gdf.loc[gdf['ZONAS']  ==  zona[0]]
+    geojson_zona = zona_shp.to_json()
+    # Adicionar o segundo GeoJSON ao mapa com uma cor diferente
+    folium.GeoJson(
+        geojson_zona,
+        name='shapefile',
+        style_function=lambda x: {'color': 'yellow'}
+    ).add_to(m)
+
+local = st.sidebar.multiselect('Escolha o bairro:', gdf['NOME_BAIRR'].unique())
 
 if (len(local) > 1) or (len(local) == 0):
    print(local)
 else:
     print(local)
-    bairro_shp = gdf.loc[gdf['nome']  ==  local[0]]
+    bairro_shp = gdf.loc[gdf['NOME_BAIRR']  ==  local[0]]
     geojson_bairro = bairro_shp.to_json()
     # Adicionar o segundo GeoJSON ao mapa com uma cor diferente
     folium.GeoJson(
@@ -41,7 +60,9 @@ else:
 
 data = pd.read_excel(data_path)
 
-# add marker one by one on the map
+mun_data = pd.read_excel(data_mun_path)
+
+# add marker one by one of state schools on the map
 for i in range(0,len(data)):
    folium.Marker(
       location=[data.iloc[i]['Latitude'], data.iloc[i]['Longitude']],
