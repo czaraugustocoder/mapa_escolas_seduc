@@ -98,4 +98,4 @@ else:
 # Adicionar um controle de camadas
 folium.LayerControl().add_to(m)
 
-st_data = st_folium(m, width=600, height=400)
+st_data = st_folium(m, width=800, height=600)
