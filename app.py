@@ -17,7 +17,7 @@ shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION.xlsx")
 
-m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=11.45)
+m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
 st.title("MAPA DAS ESCOLAS")
 
