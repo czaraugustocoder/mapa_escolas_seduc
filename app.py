@@ -17,6 +17,8 @@ shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION.xlsx")
 
+data_semed = os.path.join(current_working_directory, "semed_escolas_loc.xlsx")
+
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
 st.title("MAPA DAS ESCOLAS")
@@ -70,6 +72,19 @@ for i in range(0,len(data)):
             <div style="background-color: green; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
         """),
       popup=data.iloc[i]['Escola']
+   ).add_to(m)
+
+
+dados_semed = pd.read_excel(data_semed)
+
+# add marker one by one of state schools on the map
+for i in range(0,len(dados_semed)):
+   folium.Marker(
+      location=[dados_semed.iloc[i]['LATITUDE'], dados_semed.iloc[i]['LONGITUDE']],
+      icon=folium.DivIcon(html=f"""
+            <div style="background-color: blue; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
+        """),
+      popup=dados_semed.iloc[i]['ESCOLA']
    ).add_to(m)
 
 escola = st.sidebar.selectbox('Escolha a escola para adicionar o raio de 1km:', data['SIGEAM_Escola'].unique())
