@@ -3,6 +3,7 @@ import geopandas as gpd
 import streamlit as st
 from streamlit_folium import st_folium
 import pandas as pd
+import math
 import os
 
 st.set_page_config(page_title="MAPA",
@@ -115,6 +116,46 @@ else:
     fill=True,
     fill_color='lightblue'
     ).add_to(m)
+
+
+# Função para calcular a distância usando a fórmula de Haversine
+def haversine(coord1, coord2):
+    # Raio da Terra em quilômetros
+    R = 6371.0
+    
+    # Converter latitude e longitude de graus para radianos
+    lat1, lon1 = math.radians(coord1[0]), math.radians(coord1[1])
+    lat2, lon2 = math.radians(coord2[0]), math.radians(coord2[1])
+    
+    # Diferenças entre as coordenadas
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    
+    # Aplicar a fórmula de Haversine
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    
+    # Distância em quilômetros
+    distancia = R * c
+    return distancia
+
+
+if ((escola != 0) and (escola_m != 0)):
+  # Obtenha as coordenadas das escolas selecionadas
+  coords_estadual = data.loc[data['SIGEAM_Escola'] == escola, ['Latitude', 'Longitude']].values[0]
+  coords_municipal = dados_semed.loc[dados_semed['SIGEAM_ESCOLA'] == escola_m, ['LATITUDE', 'LONGITUDE']].values[0]
+  
+  # Calcular a distância entre as duas escolas usando Haversine
+  distancia = haversine(coords_estadual, coords_municipal)
+  
+  # Adiciona uma linha entre as duas escolas
+  folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+  
+  # Adiciona um marcador no ponto médio com a distância
+  folium.Marker(
+      location=ponto_medio,
+      icon=folium.DivIcon(html=f'<div style="font-size: 12pt; color: black;">{distancia:.2f} km</div>')
+  ).add_to(m)
 
 #icon = folium.Icon(color='blue', icon='info-sign')
 
