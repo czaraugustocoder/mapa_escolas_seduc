@@ -17,7 +17,7 @@ shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION.xlsx")
 
-data_semed = os.path.join(current_working_directory, "semed_escolas_loc.xlsx")
+data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado.xlsx")
 
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
