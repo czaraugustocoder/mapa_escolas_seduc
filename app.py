@@ -87,7 +87,7 @@ for i in range(0,len(dados_semed)):
       popup=dados_semed.iloc[i]['ESCOLA']
    ).add_to(m)
 
-escola = st.sidebar.selectbox('Escolha a escola para adicionar o raio de 1km:', data['SIGEAM_Escola'].unique())
+escola = st.sidebar.selectbox('Escolha a escola estadual para adicionar o raio de 1km:', data['SIGEAM_Escola'].unique())
 
 if escola == 0:
    print(escola)
@@ -95,6 +95,21 @@ else:
    index = data.loc[data['SIGEAM_Escola'] == escola].index[0]
    folium.Circle(
     location=[data.iloc[index]['Latitude'], data.iloc[index]['Longitude']],
+    radius=1000,
+    color='red',
+    fill=True,
+    fill_color='lightblue'
+    ).add_to(m)
+
+
+escola_m = st.sidebar.selectbox('Escolha a escola municipal para adicionar o raio de 1km:', dados_semed['SIGEAM_Escola'].unique())
+
+if escola_m == 0:
+   print(escola_m)
+else:
+   index = dados_semed.loc[dados_semed['SIGEAM_ESCOLA'] == escola_m].index[0]
+   folium.Circle(
+    location=[dados_semed.iloc[index]['LATITUDE'], dados_semed.iloc[index]['LONGITUDE']],
     radius=1000,
     color='red',
     fill=True,
