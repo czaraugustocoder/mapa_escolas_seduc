@@ -150,6 +150,9 @@ if ((escola != 0) and (escola_m != 0)):
   
   # Adiciona uma linha entre as duas escolas
   folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+
+  # Calcula o ponto médio para exibir a distância
+  ponto_medio = [(coords_estadual[0] + coords_municipal[0]) / 2, (coords_estadual[1] + coords_municipal[1]) / 2]
   
   # Adiciona um marcador no ponto médio com a distância
   folium.Marker(
