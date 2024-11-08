@@ -102,7 +102,7 @@ else:
     ).add_to(m)
 
 
-escola_m = st.sidebar.selectbox('Escolha a escola municipal para adicionar o raio de 1km:', dados_semed['SIGEAM_Escola'].unique())
+escola_m = st.sidebar.selectbox('Escolha a escola municipal para adicionar o raio de 1km:', dados_semed['SIGEAM_ESCOLA'].unique())
 
 if escola_m == 0:
    print(escola_m)
