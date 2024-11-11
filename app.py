@@ -16,7 +16,7 @@ path_logo = os.path.join(current_working_directory, "cest_logo.jpeg")
 
 shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 
-data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION.xlsx")
+data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION_NEW.xlsx")
 
 data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado.xlsx")
 
