@@ -174,6 +174,16 @@ population['CD_SETOR'] = population['CD_SETOR'].astype(str)
 
 resultado = manaus_setores.merge(population, on="CD_SETOR")
 
+demografia = st.sidebar.multiselect('Escolha a variável demográfica:', ['V01006', 'V01031', 'V01032', 'V01033', 'V01034', 'V01035', 'V01036', 'V01037', 'V01038', 'V01039', 'V01040', 'V01041'])
+
+if (len(demografia) > 1) or (len(demografia) == 0):
+  resultado = resultado[["NM_BAIRRO","CD_SETOR", "geometry", "V01006"]]
+  resultado = resultado.rename(columns={"V01006": "população"})
+else:
+  resultado = resultado[["NM_BAIRRO","CD_SETOR", "geometry", demografia[0]]]
+  resultado = resultado.rename(columns={demografia[0]: "população"})
+  
+
 local_setor = st.sidebar.multiselect('Escolha o bairro com setor censitário:', ['Lago Azul', 'Nova Cidade', 'Centro',
        'Nossa Senhora Aparecida', 'Praça 14 de Janeiro',
        'Presidente Vargas', 'Cachoeirinha', 'Vila da Prata', 'Compensa',
@@ -196,7 +206,7 @@ local_setor = st.sidebar.multiselect('Escolha o bairro com setor censitário:', 
 
 if (len(local_setor) > 1) or (len(local_setor) == 0):
     print(local_setor)
-    populacao_bairro = resultado[["NM_BAIRRO","CD_SETOR", "geometry", "V01006"]]
+    populacao_bairro = resultado[["NM_BAIRRO","CD_SETOR", "geometry", "população"]]
     # Converter para GeoJSON
     geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
 
@@ -205,7 +215,7 @@ if (len(local_setor) > 1) or (len(local_setor) == 0):
         geo_data=geo_json_data,
         name='choropleth',
         data=populacao_bairro,
-        columns=['CD_SETOR', 'V01006'],  # Nome da coluna de união e a coluna de valores
+        columns=['CD_SETOR', 'população'],  # Nome da coluna de união e a coluna de valores
         key_on='feature.id',  # Mapeia os dados pela chave (assumindo que 'bairros' é o identificador)
         fill_color='YlOrRd',
         fill_opacity=0.7,
@@ -218,7 +228,7 @@ if (len(local_setor) > 1) or (len(local_setor) == 0):
 else:
     print(local_setor)
     populacao_bairro = resultado.loc[resultado["NM_BAIRRO"] == local_setor[0]]
-    populacao_bairro = populacao_bairro[["NM_BAIRRO","CD_SETOR", "geometry", "V01006"]]
+    populacao_bairro = populacao_bairro[["NM_BAIRRO","CD_SETOR", "geometry", "população"]]
     # Converter para GeoJSON
     geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
 
@@ -227,7 +237,7 @@ else:
         geo_data=geo_json_data,
         name='choropleth',
         data=populacao_bairro,
-        columns=['CD_SETOR', 'V01006'],  # Nome da coluna de união e a coluna de valores
+        columns=['CD_SETOR', 'população'],  # Nome da coluna de união e a coluna de valores
         key_on='feature.id',  # Mapeia os dados pela chave (assumindo que 'bairros' é o identificador)
         fill_color='YlOrRd',
         fill_opacity=0.7,
@@ -240,7 +250,7 @@ else:
 
 
 grouped = resultado.groupby("NM_BAIRRO").agg({
-    "V01006": "sum"
+    "população": "sum"
 }).reset_index()
   
 
