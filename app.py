@@ -1,4 +1,6 @@
 import folium
+from folium import Choropleth
+from folium import Choropleth, GeoJson, LayerControl
 import geopandas as gpd
 import streamlit as st
 from streamlit_folium import st_folium
@@ -19,6 +21,10 @@ shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION_NEW.xlsx")
 
 data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado.xlsx")
+
+shp_setor = os.path.join(current_working_directory, "Manaus_setores_CD2022.shp")
+
+demografia_path = os.path.join(current_working_directory, "AGREGADOS_POR_SETORES_CENSITARIOS_MANAUS.xlsx")
 
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
@@ -159,6 +165,78 @@ if ((escola != 0) and (escola_m != 0)):
       location=ponto_medio,
       icon=folium.DivIcon(html=f'<div style="font-size: 12pt; color: black;">{distancia:.2f} km</div>')
   ).add_to(m)
+
+manaus_setores = gpd.read_file(shp_setor)
+
+population = pd.read_excel(demografia_path)
+population.rename(columns={'CD_setor': 'CD_SETOR'}, inplace=True)
+population['CD_SETOR'] = population['CD_SETOR'].astype(str)
+
+resultado = manaus_setores.merge(population, on="CD_SETOR")
+
+local_setor = st.sidebar.multiselect('Escolha o bairro:', ['Lago Azul', 'Nova Cidade', 'Centro',
+       'Nossa Senhora Aparecida', 'Praça 14 de Janeiro',
+       'Presidente Vargas', 'Cachoeirinha', 'Vila da Prata', 'Compensa',
+       'São Jorge', 'Santo Antônio', 'Santo Agostinho', 'São Raimundo',
+       'Glória', 'Planalto', 'Alvorada', 'Nova Esperança',
+       'Lírio do Vale', 'Redenção', 'Da Paz', 'Dom Pedro I',
+       'Ponta Negra', 'Tarumã', 'Japiim', 'Petrópolis', 'Raiz',
+       'São Francisco', 'Coroado', 'Vila Buriti', 'São Lázaro', 'Betânia',
+       'Crespo', 'Distrito Industrial I', 'Distrito Industrial II',
+       'Colônia Oliveira Machado', 'Morro da Liberdade', 'Armando Mendes',
+       'Gilberto Mestrinho', 'Colônia Antônio Aleixo', 'Educandos',
+       'Santa Luzia', 'Puraquequara', 'Mauazinho', 'Jorge Teixeira',
+       'Parque 10 de Novembro', 'Aleixo', 'Adrianópolis', 'Flores',
+       'Nossa Senhora das Graças', 'Chapada', 'Cidade Nova',
+       'São Geraldo', 'Novo Aleixo', 'Colônia Santo Antônio',
+       'Novo Israel', 'Colônia Terra Nova', 'Monte das Oliveiras',
+       'Santa Etelvina', 'Cidade de Deus', 'Tarumã-Açu', 'Tancredo Neves',
+       'São José Operário', 'Zumbi dos Palmares'])
+
+
+if (len(local_setor) > 1) or (len(local_setor) == 0):
+    print(local_setor)
+    populacao_bairro = resultado[["CD_SETOR", "geometry", "V01006"]]
+    # Converter para GeoJSON
+    geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
+
+    # Adicionar o mapa coroplético
+    Choropleth(
+        geo_data=geo_json_data,
+        name='choropleth',
+        data=populacao_bairro,
+        columns=['CD_SETOR', 'V01006'],  # Nome da coluna de união e a coluna de valores
+        key_on='feature.id',  # Mapeia os dados pela chave (assumindo que 'bairros' é o identificador)
+        fill_color='YlOrRd',
+        fill_opacity=0.7,
+        line_opacity=0.2,
+        legend_name='População por Setor Censitario'
+    ).add_to(m)
+
+    # Adicionar controles ao mapa
+    folium.LayerControl().add_to(m)
+else:
+    print(local_setor)
+    populacao_bairro = resultado.loc[resultado["NM_BAIRRO"] == local_setor[0]]
+    populacao_bairro = populacao_bairro[["CD_SETOR", "geometry", "V01006"]]
+    # Converter para GeoJSON
+    geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
+
+    # Adicionar o mapa coroplético
+    Choropleth(
+        geo_data=geo_json_data,
+        name='choropleth',
+        data=populacao_bairro,
+        columns=['CD_SETOR', 'V01006'],  # Nome da coluna de união e a coluna de valores
+        key_on='feature.id',  # Mapeia os dados pela chave (assumindo que 'bairros' é o identificador)
+        fill_color='YlOrRd',
+        fill_opacity=0.7,
+        line_opacity=0.2,
+        legend_name='População por Setor Censitario'
+    ).add_to(m)
+
+    # Adicionar controles ao mapa
+    folium.LayerControl().add_to(m)
 
 #icon = folium.Icon(color='blue', icon='info-sign')
 
