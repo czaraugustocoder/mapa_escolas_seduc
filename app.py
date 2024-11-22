@@ -174,7 +174,7 @@ population['CD_SETOR'] = population['CD_SETOR'].astype(str)
 
 resultado = manaus_setores.merge(population, on="CD_SETOR")
 
-local_setor = st.sidebar.multiselect('Escolha o bairro:', ['Lago Azul', 'Nova Cidade', 'Centro',
+local_setor = st.sidebar.multiselect('Escolha o bairro com setor censitário:', ['Lago Azul', 'Nova Cidade', 'Centro',
        'Nossa Senhora Aparecida', 'Praça 14 de Janeiro',
        'Presidente Vargas', 'Cachoeirinha', 'Vila da Prata', 'Compensa',
        'São Jorge', 'Santo Antônio', 'Santo Agostinho', 'São Raimundo',
