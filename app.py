@@ -257,7 +257,6 @@ grouped = resultado.groupby("NM_BAIRRO").agg({
 
 col1, col2 = st.columns([2, 1.25])
 with col1:
-    st.write("MAPA DAS RESERVAS FLORESTAIS")
     st_data = st_folium(m, width=1000, height=700)
 
 with col2:
