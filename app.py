@@ -257,7 +257,7 @@ grouped = resultado.groupby("NM_BAIRRO").agg({
 
 col1, col2 = st.columns([2, 1])
 with col1:
-    st_data = st_folium(m, width=1000, height=700)
+    st_data = st_folium(m, width=900, height=700)
 
 with col2:
     st.write("TABELA DA POPULAÇÃO POR BAIRRO")
