@@ -196,7 +196,7 @@ local_setor = st.sidebar.multiselect('Escolha o bairro com setor censitário:', 
 
 if (len(local_setor) > 1) or (len(local_setor) == 0):
     print(local_setor)
-    populacao_bairro = resultado[["CD_SETOR", "geometry", "V01006"]]
+    populacao_bairro = resultado[["NM_BAIRRO","CD_SETOR", "geometry", "V01006"]]
     # Converter para GeoJSON
     geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
 
@@ -218,7 +218,7 @@ if (len(local_setor) > 1) or (len(local_setor) == 0):
 else:
     print(local_setor)
     populacao_bairro = resultado.loc[resultado["NM_BAIRRO"] == local_setor[0]]
-    populacao_bairro = populacao_bairro[["CD_SETOR", "geometry", "V01006"]]
+    populacao_bairro = populacao_bairro[["NM_BAIRRO","CD_SETOR", "geometry", "V01006"]]
     # Converter para GeoJSON
     geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
 
@@ -238,6 +238,12 @@ else:
     # Adicionar controles ao mapa
     folium.LayerControl().add_to(m)
 
+
+grouped = resultado.groupby("NM_BAIRRO").agg({
+    "V01006": "sum"
+}).reset_index()
+  
+
 #icon = folium.Icon(color='blue', icon='info-sign')
 
 # Adicionar o primeiro GeoJSON ao mapa
@@ -248,6 +254,12 @@ else:
 #).add_to(m)
 
 # Adicionar um controle de camadas
-folium.LayerControl().add_to(m)
 
-st_data = st_folium(m, width=1000, height=700)
+col1, col2 = st.columns([2, 1.25])
+with col1:
+    st.write("MAPA DAS RESERVAS FLORESTAIS")
+    st_data = st_folium(m, width=1000, height=700)
+
+with col2:
+    st.write("TABELA DA POPULAÇÃO POR BAIRRO")
+    st.dataframe(grouped, width=700, height=700)
