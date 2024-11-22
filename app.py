@@ -255,7 +255,7 @@ grouped = resultado.groupby("NM_BAIRRO").agg({
 
 # Adicionar um controle de camadas
 
-col1, col2 = st.columns([2, 1.25])
+col1, col2 = st.columns([2, 1])
 with col1:
     st_data = st_folium(m, width=1000, height=700)
 
