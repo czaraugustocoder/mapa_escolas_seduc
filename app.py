@@ -16,58 +16,17 @@ current_working_directory = os.getcwd()
 
 path_logo = os.path.join(current_working_directory, "cest_logo.jpeg")
 
-shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
-
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION_NEW.xlsx")
 
 data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado.xlsx")
-
-shp_setor = os.path.join(current_working_directory, "Manaus_setores_CD2022.shp")
-
-demografia_path = os.path.join(current_working_directory, "AGREGADOS_POR_SETORES_CENSITARIOS_MANAUS.xlsx")
 
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
 st.title("MAPA DAS ESCOLAS")
 
-st.sidebar.image(path_logo)
+st.sidebar.image(path_logo, caption="Minha Logo", use_column_width=True)
 
 st.sidebar.header("Filtre as opções que deseja:")
-
-# Ler o shapefile usando geopandas
-gdf = gpd.read_file(shp_path)
-
-gdf = gdf.to_crs("EPSG:4326")
-
-zona = st.sidebar.multiselect('Escolha a zona:', gdf['ZONAS'].unique())
-
-if (len(zona) > 1) or (len(zona) == 0):
-   print(zona)
-else:
-    print(zona)
-    zona_shp = gdf.loc[gdf['ZONAS']  ==  zona[0]]
-    geojson_zona = zona_shp.to_json()
-    # Adicionar o segundo GeoJSON ao mapa com uma cor diferente
-    folium.GeoJson(
-        geojson_zona,
-        name='shapefile',
-        style_function=lambda x: {'color': 'yellow'}
-    ).add_to(m)
-
-local = st.sidebar.multiselect('Escolha o bairro:', gdf['NOME_BAIRR'].unique())
-
-if (len(local) > 1) or (len(local) == 0):
-   print(local)
-else:
-    print(local)
-    bairro_shp = gdf.loc[gdf['NOME_BAIRR']  ==  local[0]]
-    geojson_bairro = bairro_shp.to_json()
-    # Adicionar o segundo GeoJSON ao mapa com uma cor diferente
-    folium.GeoJson(
-        geojson_bairro,
-        name='shapefile',
-        style_function=lambda x: {'color': 'purple'}
-    ).add_to(m)
 
 data = pd.read_excel(data_path)
 
@@ -122,7 +81,7 @@ else:
     fill=True,
     fill_color='lightblue'
     ).add_to(m)
-
+   
 
 # Função para calcular a distância usando a fórmula de Haversine
 def haversine(coord1, coord2):
@@ -165,110 +124,5 @@ if ((escola != 0) and (escola_m != 0)):
       location=ponto_medio,
       icon=folium.DivIcon(html=f'<div style="font-size: 12pt; color: black;">{distancia:.2f} km</div>')
   ).add_to(m)
-
-manaus_setores = gpd.read_file(shp_setor)
-
-population = pd.read_excel(demografia_path)
-population.rename(columns={'CD_setor': 'CD_SETOR'}, inplace=True)
-population['CD_SETOR'] = population['CD_SETOR'].astype(str)
-
-resultado = manaus_setores.merge(population, on="CD_SETOR")
-
-demografia = st.sidebar.multiselect('Escolha a variável demográfica:', ['V01006', 'V01031', 'V01032', 'V01033', 'V01034', 'V01035', 'V01036', 'V01037', 'V01038', 'V01039', 'V01040', 'V01041'])
-
-if (len(demografia) > 1) or (len(demografia) == 0):
-  resultado = resultado[["NM_BAIRRO","CD_SETOR", "geometry", "V01006"]]
-  resultado = resultado.rename(columns={"V01006": "população"})
-else:
-  resultado = resultado[["NM_BAIRRO","CD_SETOR", "geometry", demografia[0]]]
-  resultado = resultado.rename(columns={demografia[0]: "população"})
-  
-
-local_setor = st.sidebar.multiselect('Escolha o bairro com setor censitário:', ['Lago Azul', 'Nova Cidade', 'Centro',
-       'Nossa Senhora Aparecida', 'Praça 14 de Janeiro',
-       'Presidente Vargas', 'Cachoeirinha', 'Vila da Prata', 'Compensa',
-       'São Jorge', 'Santo Antônio', 'Santo Agostinho', 'São Raimundo',
-       'Glória', 'Planalto', 'Alvorada', 'Nova Esperança',
-       'Lírio do Vale', 'Redenção', 'Da Paz', 'Dom Pedro I',
-       'Ponta Negra', 'Tarumã', 'Japiim', 'Petrópolis', 'Raiz',
-       'São Francisco', 'Coroado', 'Vila Buriti', 'São Lázaro', 'Betânia',
-       'Crespo', 'Distrito Industrial I', 'Distrito Industrial II',
-       'Colônia Oliveira Machado', 'Morro da Liberdade', 'Armando Mendes',
-       'Gilberto Mestrinho', 'Colônia Antônio Aleixo', 'Educandos',
-       'Santa Luzia', 'Puraquequara', 'Mauazinho', 'Jorge Teixeira',
-       'Parque 10 de Novembro', 'Aleixo', 'Adrianópolis', 'Flores',
-       'Nossa Senhora das Graças', 'Chapada', 'Cidade Nova',
-       'São Geraldo', 'Novo Aleixo', 'Colônia Santo Antônio',
-       'Novo Israel', 'Colônia Terra Nova', 'Monte das Oliveiras',
-       'Santa Etelvina', 'Cidade de Deus', 'Tarumã-Açu', 'Tancredo Neves',
-       'São José Operário', 'Zumbi dos Palmares'])
-
-
-if (len(local_setor) > 1) or (len(local_setor) == 0):
-    print(local_setor)
-    populacao_bairro = resultado[["NM_BAIRRO","CD_SETOR", "geometry", "população"]]
-    # Converter para GeoJSON
-    geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
-
-    # Adicionar o mapa coroplético
-    Choropleth(
-        geo_data=geo_json_data,
-        name='choropleth',
-        data=populacao_bairro,
-        columns=['CD_SETOR', 'população'],  # Nome da coluna de união e a coluna de valores
-        key_on='feature.id',  # Mapeia os dados pela chave (assumindo que 'bairros' é o identificador)
-        fill_color='YlOrRd',
-        fill_opacity=0.7,
-        line_opacity=0.2,
-        legend_name='População por Setor Censitario'
-    ).add_to(m)
-
-    # Adicionar controles ao mapa
-    folium.LayerControl().add_to(m)
-else:
-    print(local_setor)
-    populacao_bairro = resultado.loc[resultado["NM_BAIRRO"] == local_setor[0]]
-    populacao_bairro = populacao_bairro[["NM_BAIRRO","CD_SETOR", "geometry", "população"]]
-    # Converter para GeoJSON
-    geo_json_data = populacao_bairro[['geometry', 'CD_SETOR']].set_index('CD_SETOR').__geo_interface__
-
-    # Adicionar o mapa coroplético
-    Choropleth(
-        geo_data=geo_json_data,
-        name='choropleth',
-        data=populacao_bairro,
-        columns=['CD_SETOR', 'população'],  # Nome da coluna de união e a coluna de valores
-        key_on='feature.id',  # Mapeia os dados pela chave (assumindo que 'bairros' é o identificador)
-        fill_color='YlOrRd',
-        fill_opacity=0.7,
-        line_opacity=0.2,
-        legend_name='População por Setor Censitario'
-    ).add_to(m)
-
-    # Adicionar controles ao mapa
-    folium.LayerControl().add_to(m)
-
-
-grouped = resultado.groupby("NM_BAIRRO").agg({
-    "população": "sum"
-}).reset_index()
-  
-
-#icon = folium.Icon(color='blue', icon='info-sign')
-
-# Adicionar o primeiro GeoJSON ao mapa
-#folium.GeoJson(
-#    geojson_data,
-#    name='shapefile',
-#    style_function=lambda x: {'color': 'blue'}
-#).add_to(m)
-
-# Adicionar um controle de camadas
-
-col1, col2 = st.columns([2, 0.75])
-with col1:
-    st_data = st_folium(m, width=900, height=700)
-
-with col2:
-    st.write("TABELA DA POPULAÇÃO POR BAIRRO")
-    st.dataframe(grouped, width=700, height=700)
+   
+st_folium(m, width=725, returned_objects=[])
