@@ -14,6 +14,8 @@ st.set_page_config(page_title="MAPA",
 
 current_working_directory = os.getcwd()
 
+shp_path = os.path.join(current_working_directory, "BAIRROS.shp")
+
 path_logo = os.path.join(current_working_directory, "cest_logo.jpeg")
 
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION_NEW.xlsx")
@@ -30,6 +32,8 @@ st.sidebar.header("Filtre as opções que deseja:")
 
 data = pd.read_excel(data_path)
 
+dados_semed = pd.read_excel(data_semed)
+
 # add marker one by one of state schools on the map
 for i in range(0,len(data)):
    folium.Marker(
@@ -40,9 +44,6 @@ for i in range(0,len(data)):
       popup=data.iloc[i]['Escola']
    ).add_to(m)
 
-
-dados_semed = pd.read_excel(data_semed)
-
 # add marker one by one of state schools on the map
 for i in range(0,len(dados_semed)):
    folium.Marker(
@@ -52,6 +53,42 @@ for i in range(0,len(dados_semed)):
         """),
       popup=dados_semed.iloc[i]['ESCOLA']
    ).add_to(m)
+
+
+# Ler o shapefile usando geopandas
+gdf = gpd.read_file(shp_path)
+
+gdf = gdf.to_crs("EPSG:4326")
+
+zona = st.sidebar.multiselect('Escolha a zona:', gdf['ZONAS'].unique())
+
+if (len(zona) > 1) or (len(zona) == 0):
+   print(zona)
+else:
+    print(zona)
+    zona_shp = gdf.loc[gdf['ZONAS']  ==  zona[0]]
+    geojson_zona = zona_shp.to_json()
+    # Adicionar o segundo GeoJSON ao mapa com uma cor diferente
+    folium.GeoJson(
+        geojson_zona,
+        name='shapefile',
+        style_function=lambda x: {'color': 'yellow'}
+    ).add_to(m)
+
+local = st.sidebar.multiselect('Escolha o bairro:', gdf['NOME_BAIRR'].unique())
+
+if (len(local) > 1) or (len(local) == 0):
+   print(local)
+else:
+    print(local)
+    bairro_shp = gdf.loc[gdf['NOME_BAIRR']  ==  local[0]]
+    geojson_bairro = bairro_shp.to_json()
+    # Adicionar o segundo GeoJSON ao mapa com uma cor diferente
+    folium.GeoJson(
+        geojson_bairro,
+        name='shapefile',
+        style_function=lambda x: {'color': 'purple'}
+    ).add_to(m)
 
 escola = st.sidebar.selectbox('Escolha a escola estadual para adicionar o raio de 1km:', data['SIGEAM_Escola'].unique())
 
