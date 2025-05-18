@@ -24,24 +24,33 @@ data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado
 
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
-st.title("MAPA DAS ESCOLAS")
+st.title("MAPA DAS ESCOLAS - MANAUS")
 
-st.sidebar.image(path_logo, caption="Minha Logo", use_column_width=True)
+st.write("Mapa interativo das escolas estaduais e municipais da cidade de Manaus")
 
-st.sidebar.header("Filtre as opções que deseja:")
+st.sidebar.image(path_logo, use_column_width=True)
+
+st.sidebar.header("Selecione as opções de bairros que deseja:")
 
 data = pd.read_excel(data_path)
+
+data.rename(columns={
+    'Latitude': 'LATITUDE',
+    'Longitude': 'LONGITUDE',
+    'Escola': 'ESCOLA',
+    'SIGEAM_Escola': 'SIGEAM_ESCOLA',
+}, inplace=True)
 
 dados_semed = pd.read_excel(data_semed)
 
 # add marker one by one of state schools on the map
 for i in range(0,len(data)):
    folium.Marker(
-      location=[data.iloc[i]['Latitude'], data.iloc[i]['Longitude']],
+      location=[data.iloc[i]['LATITUDE'], data.iloc[i]['LONGITUDE']],
       icon=folium.DivIcon(html=f"""
             <div style="background-color: green; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
         """),
-      popup=data.iloc[i]['Escola']
+      popup=data.iloc[i]['ESCOLA']
    ).add_to(m)
 
 # add marker one by one of state schools on the map
@@ -90,29 +99,45 @@ else:
         style_function=lambda x: {'color': 'purple'}
     ).add_to(m)
 
-escola = st.sidebar.selectbox('Escolha a escola estadual para adicionar o raio de 1km:', data['SIGEAM_Escola'].unique())
+
+st.sidebar.header("Selecione as opções de escolas que deseja:")
+
+selecao1 = st.sidebar.radio("Escolha a rede:",["estadual", "municipal"])
+
+if selecao1 == "estadual":
+   data1 = data
+elif selecao1 == "municipal":
+   data1 = dados_semed
+
+escola = st.sidebar.selectbox('Escolha a escola para adicionar o raio de 1km: ', data1['SIGEAM_ESCOLA'].unique())
+
+selecao2 = st.sidebar.radio("Escolha a rede:",["municipal", "estadual"])
+
+if selecao2 == "municipal":
+   data2 = dados_semed
+elif selecao2 == "estadual":
+   data2 = data
+
+escola_m = st.sidebar.selectbox('Escolha a escola para adicionar o raio de 1km:', data2['SIGEAM_ESCOLA'].unique())
 
 if escola == 0:
    print(escola)
-else:
-   index = data.loc[data['SIGEAM_Escola'] == escola].index[0]
+elif (escola != 0) and (escola_m == 0):
+   index = data1.loc[data1['SIGEAM_ESCOLA'] == escola].index[0]
    folium.Circle(
-    location=[data.iloc[index]['Latitude'], data.iloc[index]['Longitude']],
+    location=[data1.iloc[index]['LATITUDE'], data1.iloc[index]['LONGITUDE']],
     radius=1000,
     color='red',
     fill=True,
     fill_color='lightblue'
     ).add_to(m)
 
-
-escola_m = st.sidebar.selectbox('Escolha a escola municipal para adicionar o raio de 1km:', dados_semed['SIGEAM_ESCOLA'].unique())
-
 if escola_m == 0:
    print(escola_m)
-else:
-   index = dados_semed.loc[dados_semed['SIGEAM_ESCOLA'] == escola_m].index[0]
+elif (escola_m != 0) and (escola == 0):
+   index = data2.loc[data2['SIGEAM_ESCOLA'] == escola_m].index[0]
    folium.Circle(
-    location=[dados_semed.iloc[index]['LATITUDE'], dados_semed.iloc[index]['LONGITUDE']],
+    location=[data2.iloc[index]['LATITUDE'], data2.iloc[index]['LONGITUDE']],
     radius=1000,
     color='red',
     fill=True,
@@ -144,8 +169,8 @@ def haversine(coord1, coord2):
 
 if ((escola != 0) and (escola_m != 0)):
   # Obtenha as coordenadas das escolas selecionadas
-  coords_estadual = data.loc[data['SIGEAM_Escola'] == escola, ['Latitude', 'Longitude']].values[0]
-  coords_municipal = dados_semed.loc[dados_semed['SIGEAM_ESCOLA'] == escola_m, ['LATITUDE', 'LONGITUDE']].values[0]
+  coords_estadual = data1.loc[data1['SIGEAM_ESCOLA'] == escola, ['LATITUDE', 'LONGITUDE']].values[0]
+  coords_municipal = data2.loc[data2['SIGEAM_ESCOLA'] == escola_m, ['LATITUDE', 'LONGITUDE']].values[0]
   
   # Calcular a distância entre as duas escolas usando Haversine
   distancia = haversine(coords_estadual, coords_municipal)
