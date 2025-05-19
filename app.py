@@ -26,7 +26,7 @@ m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.
 
 st.title("MAPA DAS ESCOLAS - MANAUS")
 
-st.write("Mapa interativo das escolas estaduais e municipais da cidade de Manaus")
+st.write("Mapa interativo das escolas estaduais (cor verde) e municipais (cor azul) da cidade de Manaus")
 
 st.sidebar.image(path_logo, use_column_width=True)
 
