@@ -187,4 +187,4 @@ if ((escola != 0) and (escola_m != 0)):
       icon=folium.DivIcon(html=f'<div style="font-size: 12pt; color: black;">{distancia:.2f} km</div>')
   ).add_to(m)
    
-st_folium(m, width=725, returned_objects=[])
+st_folium(m, width=925, returned_objects=[])
