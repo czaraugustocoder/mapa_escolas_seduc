@@ -50,7 +50,7 @@ for i in range(0,len(data)):
       icon=folium.DivIcon(html=f"""
             <div style="background-color: green; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
         """),
-      popup=data.iloc[i]['ESCOLA']
+      popup=data.iloc[i]['SIGEAM_ESCOLA']
    ).add_to(m)
 
 # add marker one by one of state schools on the map
@@ -60,7 +60,7 @@ for i in range(0,len(dados_semed)):
       icon=folium.DivIcon(html=f"""
             <div style="background-color: blue; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
         """),
-      popup=dados_semed.iloc[i]['ESCOLA']
+      popup=dados_semed.iloc[i]['SIGEAM_ESCOLA']
    ).add_to(m)
 
 
