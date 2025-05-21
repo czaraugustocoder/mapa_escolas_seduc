@@ -188,3 +188,73 @@ if ((escola != 0) and (escola_m != 0)):
   ).add_to(m)
    
 st_folium(m, width=925, returned_objects=[])
+
+
+escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6"])
+
+D6 = [
+    (1382, 1374),
+    (1382, 77),
+    (1382, 1474),
+    (1505, 78),
+    (1505, 1474),
+    (6228, 70),
+    (7440, 1474),
+    (675, 77),
+    (1108, 79),
+    (1125, 79),
+    (1125, 83),
+    (1321, 81),
+    (1612, 79),
+    (6226, 81),
+    (6227, 81),
+    (7792, 7240),
+    (669, 69),
+    (674, 84),
+    (1046, 80),
+    (1109, 78),
+    (1110, 73),
+    (1123, 84),
+    (1124, 1283),
+    (1201, 1617),
+    (1333, 75),
+    (1351, 70),
+    (1386, 7216),
+    (1420, 1560),
+    (1470, 75),
+    (1470, 81),
+    (1484, 1283),
+    (1510, 70),
+    (1511, 6294),
+    (1511, 1617),
+    (1511, 69),
+    (1652, 69),
+    (1656, 77),
+    (1687, 1375),
+    (1692, 6520),
+    (6299, 69),
+    (6299, 1617),
+    (6511, 72),
+    (6519, 7216),
+    (6519, 1617),
+    (6652, 7216),
+    (7737, 72),
+    (7796, 84),
+    (9817, 78),
+    (1508, 1560)
+]
+
+if (escola encaminha == 0):
+  print("nada")
+elif (escola encaminha == "D6"):
+  for semed, seduc in D6:
+    # Obtenha as coordenadas das escolas selecionadas
+    coords_estadual = data1.loc[data1['SIGEAM_ESCOLA'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
+    coords_municipal = data2.loc[data2['SIGEAM_ESCOLA'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
+    
+    # Calcular a distância entre as duas escolas usando Haversine
+    distancia = haversine(coords_estadual, coords_municipal)
+    
+    # Adiciona uma linha entre as duas escolas
+    folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+
