@@ -244,9 +244,9 @@ D6 = [
     (1508, 1560)
 ]
 
-if (escola encaminha == 0):
+if (escola_encaminha == 0):
   print("nada")
-elif (escola encaminha == "D6"):
+elif (escola_encaminha == "D6"):
   for semed, seduc in D6:
     # Obtenha as coordenadas das escolas selecionadas
     coords_estadual = data1.loc[data1['SIGEAM_ESCOLA'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
