@@ -253,8 +253,8 @@ elif (escola_encaminha == "D6"):
     print(semed, seduc)
     try:
       # Obtenha as coordenadas das escolas selecionadas
-      coords_estadual = data.loc[data['SIGEAM'] == float(seduc), ['LATITUDE', 'LONGITUDE']].values[0]
-      coords_municipal = dados_semed.loc[dados_semed['SIGEAM'] == float(semed), ['LATITUDE', 'LONGITUDE']].values[0]
+      coords_estadual = data.loc[data['SIGEAM'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
+      coords_municipal = dados_semed.loc[dados_semed['SIGEAM'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
       
       # Calcular a distância entre as duas escolas usando Haversine
       distancia = haversine(coords_estadual, coords_municipal)
