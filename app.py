@@ -252,7 +252,6 @@ elif (escola_encaminha == "D6"):
   for semed, seduc in D6:
     print(semed, seduc)
     try:
-      print("sucesso")
       # Obtenha as coordenadas das escolas selecionadas
       coords_estadual = data.loc[data['ESCOLA'] == float(seduc), ['LATITUDE', 'LONGITUDE']].values[0]
       coords_municipal = dados_semed.loc[dados_semed['ESCOLA'] == float(semed), ['LATITUDE', 'LONGITUDE']].values[0]
@@ -262,6 +261,7 @@ elif (escola_encaminha == "D6"):
       
       # Adiciona uma linha entre as duas escolas
       folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+      print("sucesso")
     except Exception as e:
       print(f"Ocorreu o erro: {e}")
 
