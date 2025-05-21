@@ -189,7 +189,7 @@ if ((escola != 0) and (escola_m != 0)):
 
 st.sidebar.header("Selecione o distrito que seja:")
 
-escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6", "D7", "D5", "D4"])
+escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6", "D7", "D5", "D4", "D3"])
 
 D6 = [
     (1382, 1374),
@@ -501,8 +501,106 @@ D4 = [
     (6221, 8117)
 ]
 
+D3 = [
+    (570, 127),
+    (576, 147),
+    (576, 147),
+    (579, 98),
+    (579, 98),
+    (585, 138),
+    (588, 150),
+    (588, 150),
+    (588, 148),
+    (655, 130),
+    (655, 130),
+    (671, 151),
+    (671, 151),
+    (673, 123),
+    (673, 123),
+    (677, 130),
+    (725, 147),
+    (1171, 130),
+    (1171, 130),
+    (1504, 98),
+    (1504, 98),
+    (1504, 98),
+    (6231, 125),
+    (6231, 127),
+    (6231, 127),
+    (6286, 7),
+    (6286, 7),
+    (6530, 130),
+    (6530, 130),
+    (683, 23),
+    (683, 23),
+    (687, 8),
+    (687, 8),
+    (699, 11),
+    (699, 11),
+    (701, 6238),
+    (701, 6238),
+    (701, 151),
+    (701, 151),
+    (703, 9),
+    (704, 23),
+    (707, 9),
+    (708, 5),
+    (708, 6),
+    (708, 6238),
+    (708, 5),
+    (710, 25),
+    (710, 25),
+    (710, 25),
+    (729, 16),
+    (1169, 6238),
+    (1169, 6238),
+    (1169, 8),
+    (1312, 9823),
+    (1312, 25),
+    (1368, 10),
+    (1368, 10),
+    (1467, 151),
+    (1467, 151),
+    (6343, 151),
+    (7045, 9),
+    (7045, 17),
+    (7790, 5),
+    (7790, 6238),
+    (8494, 151),
+    (8494, 151),
+    (659, 151),
+    (760, 152),
+    (763, 151),
+    (1181, 152),
+    (1181, 151),
+    (1185, 152),
+    (1185, 152),
+    (1193, 152),
+    (1576, 152),
+    (1576, 151),
+    (7109, 151)
+]
+
 if (escola_encaminha == 0):
   print("nada")
+
+elif (escola_encaminha == "D3"):
+  print("distrito selecionado")
+  for semed, seduc in D3:
+    print(semed, seduc)
+    try:
+      # Obtenha as coordenadas das escolas selecionadas
+      coords_estadual = data.loc[data['SIGEAM'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
+      coords_municipal = dados_semed.loc[dados_semed['SIGEAM'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
+      
+      # Calcular a distância entre as duas escolas usando Haversine
+      distancia = haversine(coords_estadual, coords_municipal)
+      
+      # Adiciona uma linha entre as duas escolas
+      folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+      print("sucesso")
+    except Exception as e:
+      print(f"Ocorreu o erro: {e}")
 
 elif (escola_encaminha == "D4"):
   print("distrito selecionado")
