@@ -252,6 +252,7 @@ elif (escola_encaminha == "D6"):
   for semed, seduc in D6:
     print(semed, seduc)
     try:
+      print("sucesso")
       # Obtenha as coordenadas das escolas selecionadas
       coords_estadual = data.loc[data['ESCOLA'] == float(seduc), ['LATITUDE', 'LONGITUDE']].values[0]
       coords_municipal = dados_semed.loc[dados_semed['ESCOLA'] == float(semed), ['LATITUDE', 'LONGITUDE']].values[0]
