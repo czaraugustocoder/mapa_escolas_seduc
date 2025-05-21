@@ -26,7 +26,7 @@ m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.
 
 st.title("MAPA DAS ESCOLAS - MANAUS")
 
-st.write("Mapa interativo das escolas estaduais (cor verde) e municipais (cor azul) da cidade de Manaus")
+st.write("Mapa interativo das escolas estaduais (cor azul) e municipais (cor laranja) da cidade de Manaus")
 
 st.sidebar.image(path_logo, use_column_width=True)
 
@@ -48,7 +48,7 @@ for i in range(0,len(data)):
    folium.Marker(
       location=[data.iloc[i]['LATITUDE'], data.iloc[i]['LONGITUDE']],
       icon=folium.DivIcon(html=f"""
-            <div style="background-color: green; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
+            <div style="background-color: blue; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
         """),
       popup=data.iloc[i]['SIGEAM_ESCOLA']
    ).add_to(m)
@@ -58,7 +58,7 @@ for i in range(0,len(dados_semed)):
    folium.Marker(
       location=[dados_semed.iloc[i]['LATITUDE'], dados_semed.iloc[i]['LONGITUDE']],
       icon=folium.DivIcon(html=f"""
-            <div style="background-color: blue; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
+            <div style="background-color: orange; border-radius: 45%; width: 8px; height: 8px; transform: translate(-50%, -50%);"></div>
         """),
       popup=dados_semed.iloc[i]['SIGEAM_ESCOLA']
    ).add_to(m)
