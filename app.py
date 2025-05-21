@@ -189,6 +189,7 @@ if ((escola != 0) and (escola_m != 0)):
    
 st_folium(m, width=925, returned_objects=[])
 
+st.sidebar.header("Selecione o distrito que seja:")
 
 escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6"])
 
