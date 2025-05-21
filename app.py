@@ -186,8 +186,6 @@ if ((escola != 0) and (escola_m != 0)):
       location=ponto_medio,
       icon=folium.DivIcon(html=f'<div style="font-size: 12pt; color: black;">{distancia:.2f} km</div>')
   ).add_to(m)
-   
-st_folium(m, width=925, returned_objects=[])
 
 st.sidebar.header("Selecione o distrito que seja:")
 
@@ -264,4 +262,5 @@ elif (escola_encaminha == "D6"):
       print("sucesso")
     except Exception as e:
       print(f"Ocorreu o erro: {e}")
-
+   
+st_folium(m, width=925, returned_objects=[])
