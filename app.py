@@ -189,7 +189,7 @@ if ((escola != 0) and (escola_m != 0)):
 
 st.sidebar.header("Selecione o distrito que seja:")
 
-escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6", "D7", "D5"])
+escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6", "D7", "D5", "D4"])
 
 D6 = [
     (1382, 1374),
@@ -457,8 +457,70 @@ D5 = [
     (1196, 1506)
 ]
 
+D4 = [
+    (8086, 159),
+    (704, 21),
+    (704, 21),
+    (710, 22),
+    (714, 91),
+    (720, 170),
+    (720, 170),
+    (724, 92),
+    (724, 92),
+    (724, 93),
+    (724, 93),
+    (726, 93),
+    (726, 93),
+    (726, 93),
+    (726, 93),
+    (727, 92),
+    (727, 92),
+    (729, 158),
+    (732, 159),
+    (733, 93),
+    (733, 158),
+    (735, 94),
+    (736, 158),
+    (1161, 176),
+    (1161, 176),
+    (1170, 157),
+    (1328, 86),
+    (1328, 157),
+    (1478, 87),
+    (1478, 87),
+    (1479, 24),
+    (1606, 169),
+    (1673, 154),
+    (1673, 169),
+    (1673, 155),
+    (6236, 170),
+    (6236, 179),
+    (785, 158),
+    (835, 158),
+    (836, 8117),
+    (6221, 8117)
+]
+
 if (escola_encaminha == 0):
   print("nada")
+
+elif (escola_encaminha == "D4"):
+  print("distrito selecionado")
+  for semed, seduc in D4:
+    print(semed, seduc)
+    try:
+      # Obtenha as coordenadas das escolas selecionadas
+      coords_estadual = data.loc[data['SIGEAM'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
+      coords_municipal = dados_semed.loc[dados_semed['SIGEAM'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
+      
+      # Calcular a distância entre as duas escolas usando Haversine
+      distancia = haversine(coords_estadual, coords_municipal)
+      
+      # Adiciona uma linha entre as duas escolas
+      folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+      print("sucesso")
+    except Exception as e:
+      print(f"Ocorreu o erro: {e}")
   
 elif (escola_encaminha == "D5"):
   print("distrito selecionado")
