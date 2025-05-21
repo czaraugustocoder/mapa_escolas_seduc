@@ -248,7 +248,9 @@ D6 = [
 if (escola_encaminha == 0):
   print("nada")
 elif (escola_encaminha == "D6"):
+  print("distrito selecionado")
   for semed, seduc in D6:
+    print(semed, seduc)
     # Obtenha as coordenadas das escolas selecionadas
     coords_estadual = data1.loc[data1['SIGEAM_ESCOLA'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
     coords_municipal = data2.loc[data2['SIGEAM_ESCOLA'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
