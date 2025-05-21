@@ -189,7 +189,7 @@ if ((escola != 0) and (escola_m != 0)):
 
 st.sidebar.header("Selecione o distrito que seja:")
 
-escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6"])
+escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6", "D7"])
 
 D6 = [
     (1382, 1374),
@@ -243,11 +243,75 @@ D6 = [
     (1508, 1560)
 ]
 
+D7 = [
+    (8494, 7466),
+    (8494, 9111),
+    (8494, 76),
+    (651, 1481),
+    (676, 1481),
+    (1125, 1514),
+    (1385, 6525),
+    (1388, 82),
+    (1405, 76),
+    (1418, 7239),
+    (6226, 1514),
+    (6227, 1514),
+    (6534, 7421),
+    (6888, 7221),
+    (6888, 1356),
+    (6967, 1507),
+    (6967, 76),
+    (7052, 9731),
+    (7436, 6525),
+    (7437, 1516),
+    (7439, 9302),
+    (7447, 7241),
+    (7791, 7221),
+    (7792, 7241),
+    (7792, 1389),
+    (7792, 7238),
+    (7794, 82),
+    (8667, 1516),
+    (8667, 9302),
+    (8667, 82),
+    (8667, 7516),
+    (9735, 1507),
+    (9735, 8671),
+    (1381, 74),
+    (759, 76),
+    (760, 76),
+    (791, 76),
+    (827, 1507),
+    (835, 82),
+    (837, 1507),
+    (1226, 9111),
+    (6502, 1507),
+    (7736, 1507)
+]
+
 if (escola_encaminha == 0):
   print("nada")
 elif (escola_encaminha == "D6"):
   print("distrito selecionado")
   for semed, seduc in D6:
+    print(semed, seduc)
+    try:
+      # Obtenha as coordenadas das escolas selecionadas
+      coords_estadual = data.loc[data['SIGEAM'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
+      coords_municipal = dados_semed.loc[dados_semed['SIGEAM'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
+      
+      # Calcular a distância entre as duas escolas usando Haversine
+      distancia = haversine(coords_estadual, coords_municipal)
+      
+      # Adiciona uma linha entre as duas escolas
+      folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+      print("sucesso")
+    except Exception as e:
+      print(f"Ocorreu o erro: {e}")
+
+elif (escola_encaminha == "D7"):
+  print("distrito selecionado")
+  for semed, seduc in D7:
     print(semed, seduc)
     try:
       # Obtenha as coordenadas das escolas selecionadas
