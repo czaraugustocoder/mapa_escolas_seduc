@@ -187,7 +187,7 @@ if ((escola != 0) and (escola_m != 0)):
       icon=folium.DivIcon(html=f'<div style="font-size: 12pt; color: black;">{distancia:.2f} km</div>')
   ).add_to(m)
 
-st.sidebar.header("Selecione o distrito que seja:")
+st.sidebar.header("Selecione o distrito que deseja:")
 
 escola_encaminha = st.sidebar.selectbox('Escolha o distrito para verificar o encaminhamento', [0, "D6", "D7", "D5", "D4", "D3", "D2", "D1"])
 
