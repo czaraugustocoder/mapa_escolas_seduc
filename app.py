@@ -251,13 +251,16 @@ elif (escola_encaminha == "D6"):
   print("distrito selecionado")
   for semed, seduc in D6:
     print(semed, seduc)
-    # Obtenha as coordenadas das escolas selecionadas
-    coords_estadual = data1.loc[data1['SIGEAM_ESCOLA'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
-    coords_municipal = data2.loc[data2['SIGEAM_ESCOLA'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
-    
-    # Calcular a distância entre as duas escolas usando Haversine
-    distancia = haversine(coords_estadual, coords_municipal)
-    
-    # Adiciona uma linha entre as duas escolas
-    folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+    try:
+      # Obtenha as coordenadas das escolas selecionadas
+      coords_estadual = data1.loc[data1['SIGEAM_ESCOLA'] == seduc, ['LATITUDE', 'LONGITUDE']].values[0]
+      coords_municipal = data2.loc[data2['SIGEAM_ESCOLA'] == semed, ['LATITUDE', 'LONGITUDE']].values[0]
+      
+      # Calcular a distância entre as duas escolas usando Haversine
+      distancia = haversine(coords_estadual, coords_municipal)
+      
+      # Adiciona uma linha entre as duas escolas
+      folium.PolyLine([coords_estadual, coords_municipal], color="red", weight=2.5, opacity=0.8).add_to(m)
+    except Exception as e:
+      print(f"Ocorreu o erro: {e}")
 
