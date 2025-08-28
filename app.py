@@ -20,7 +20,7 @@ path_logo = os.path.join(current_working_directory, "cest_logo.jpeg")
 
 data_path = os.path.join(current_working_directory, "ESCOLAS_LOCATION_NEW.xlsx")
 
-data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado.xlsx")
+data_semed = os.path.join(current_working_directory, "semed_escolas_loc_adaptado_novo.xlsx")
 
 m = folium.Map(location=[-3.057334413281103, -59.98600479911497], zoom_start=12.45)
 
@@ -810,3 +810,4 @@ elif (escola_encaminha == "D7"):
       print(f"Ocorreu o erro: {e}")
    
 st_folium(m, width=925, returned_objects=[])
+
