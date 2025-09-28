@@ -134,7 +134,7 @@ elif (escola != 0) and (escola_m == 0):
    index = data1.loc[data1['SIGEAM_ESCOLA'] == escola].index[0]
    folium.Circle(
     location=[data1.iloc[index]['LATITUDE'], data1.iloc[index]['LONGITUDE']],
-    radius=1000,
+    radius=num_raio,
     color='red',
     fill=True,
     fill_color='lightblue'
@@ -146,7 +146,7 @@ elif (escola_m != 0) and (escola == 0):
    index = data2.loc[data2['SIGEAM_ESCOLA'] == escola_m].index[0]
    folium.Circle(
     location=[data2.iloc[index]['LATITUDE'], data2.iloc[index]['LONGITUDE']],
-    radius=1000,
+    radius=num_raio,
     color='red',
     fill=True,
     fill_color='lightblue'
@@ -818,6 +818,7 @@ elif (escola_encaminha == "D7"):
       print(f"Ocorreu o erro: {e}")
    
 st_folium(m, width=925, returned_objects=[])
+
 
 
 
