@@ -108,6 +108,8 @@ else:
 
 st.sidebar.header("Selecione as opções de escolas que deseja:")
 
+num_raio = st.sidebar.number_input("Digite o valor do raio (em metros)", min_value=0, max_value=3000, value=1000)
+
 selecao1 = st.sidebar.radio("Escolha a rede:",["estadual", "municipal"])
 
 if selecao1 == "estadual":
@@ -816,5 +818,6 @@ elif (escola_encaminha == "D7"):
       print(f"Ocorreu o erro: {e}")
    
 st_folium(m, width=925, returned_objects=[])
+
 
 
