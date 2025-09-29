@@ -51,7 +51,7 @@ for i in range(0,len(data)):
             <div style="background-color: blue; border-radius: 45%; width: 10px; height: 10px; transform: translate(-50%, -50%);"></div>
         """),
         popup=folium.Popup(
-            f"<div style='font-size:14px; width:220px;'><b>Escola:</b> {data.iloc[i]['SIGEAM_ESCOLA']}<br><b>Ensinos Ofertados:</b> {data.iloc[i]['ENSINO-OFERTADO']}</div>",  
+            f"<div style='font-size:14px; width:220px;'><b>Escola:</b> {data.iloc[i]['SIGEAM_ESCOLA']}<br><b>Ensinos Ofertados:</b> {data.iloc[i]['ENSINO-OFERTADO']}<br><b>Recebidos - SEDUC:</b> {data.iloc[i]['RECEBIMENTO - SEDUC']}<br><b>Recebidos - SEMED:</b> {data.iloc[i]['RECEBIMENTO - SEMED']}</div>",  
             max_width=300, min_width=200
         )
    ).add_to(m)
@@ -818,6 +818,7 @@ elif (escola_encaminha == "D7"):
       print(f"Ocorreu o erro: {e}")
    
 st_folium(m, width=925, returned_objects=[])
+
 
 
 
