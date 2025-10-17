@@ -64,7 +64,7 @@ for i in range(0,len(dados_semed)):
             <div style="background-color: orange; border-radius: 45%; width: 10px; height: 10px; transform: translate(-50%, -50%);"></div>
         """),
         popup=folium.Popup(
-            f"<div style='font-size:14px; width:220px;'><b>Escola:</b> {dados_semed.iloc[i]['SIGEAM_ESCOLA']}<br><b>Ensinos Ofertados:</b> {dados_semed.iloc[i]['ENSINO-OFERTADO']}</div>",  
+            f"<div style='font-size:14px; width:220px;'><b>Escola:</b> {dados_semed.iloc[i]['SIGEAM_ESCOLA']}<br><b>Ensinos Ofertados:</b> {dados_semed.iloc[i]['ENSINO-OFERTADO']}<br><b>Enviados - SEDUC:</b> {dados_semed.iloc[i]['ENVIO PARA SEDUC']}</div>",  
             max_width=300, min_width=200
         )
    ).add_to(m)
@@ -196,6 +196,7 @@ if ((escola != 0) and (escola_m != 0)):
   ).add_to(m)
 
 st_folium(m, width=925, returned_objects=[])
+
 
 
 
