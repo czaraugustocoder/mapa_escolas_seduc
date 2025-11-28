@@ -30,7 +30,7 @@ st.write("Mapa interativo das escolas estaduais (cor azul) e municipais (cor lar
 
 st.sidebar.image(path_logo, use_column_width=True)
 
-st.sidebar.header("Selecione as opções de bairros que deseja:")
+st.sidebar.header("Selecione as opções de distrito e bairros que deseja:")
 
 data = pd.read_excel(data_path)
 
@@ -43,6 +43,27 @@ data.rename(columns={
 
 dados_semed = pd.read_excel(data_semed)
 
+dist = st.sidebar.multiselect('Escolha o distrito:', ["D1", "D2", "D3", "D4", "D5", "D6", "D7"])
+
+if (len(dist) < 1):
+   print(dist)
+   data = pd.read_excel(data_path)
+   data.rename(columns={
+    'Latitude': 'LATITUDE',
+    'Longitude': 'LONGITUDE',
+    'Escola': 'ESCOLA',
+    'SIGEAM_Escola': 'SIGEAM_ESCOLA',
+    }, inplace=True)
+   
+else:
+    print(dist)
+    data = data[data["CDE"].isin(dist)]
+    linha_zero = pd.DataFrame({col: [0] for col in data.columns})
+
+    data = pd.concat([linha_zero, data], ignore_index=True)
+
+    data.reset_index(drop=True, inplace=True)
+
 # add marker one by one of state schools on the map
 for i in range(0,len(data)):
    folium.Marker(
@@ -51,7 +72,7 @@ for i in range(0,len(data)):
             <div style="background-color: blue; border-radius: 45%; width: 10px; height: 10px; transform: translate(-50%, -50%);"></div>
         """),
         popup=folium.Popup(
-            f"<div style='font-size:14px; width:220px;'><b>Escola:</b> {data.iloc[i]['SIGEAM_ESCOLA']}<br><b>Ensinos Ofertados:</b> {data.iloc[i]['ENSINO-OFERTADO']}<br><b>Recebidos - SEDUC:</b> {data.iloc[i]['RECEBIMENTO - SEDUC']}<br><b>Recebidos - SEMED:</b> {data.iloc[i]['RECEBIMENTO - SEMED']}</div>",  
+            f"<div style='font-size:14px; width:220px;'><b>Escola:</b> {data.iloc[i]['SIGEAM_ESCOLA']}<br><b>Distrito:</b> {data.iloc[i]['CDE']}<br><b>Ensinos Ofertados:</b> {data.iloc[i]['ENSINO-OFERTADO']}<br><b>Recebidos - SEDUC:</b> {data.iloc[i]['RECEBIMENTO - SEDUC']}<br><b>Recebidos - SEMED:</b> {data.iloc[i]['RECEBIMENTO - SEMED']}</div>",  
             max_width=300, min_width=200
         )
    ).add_to(m)
@@ -209,9 +230,3 @@ folium.GeoJson(
     ).add_to(m)
 
 st_folium(m, width=925, returned_objects=[])
-
-
-
-
-
-
